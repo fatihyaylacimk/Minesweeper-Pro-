@@ -1,0 +1,111 @@
+/* ===================== THEME: CYBER (DEFAULT) ===================== */
+body.theme-cyber {
+  --bg:             #08080f;
+  --surface:        #0f0f1a;
+  --panel:          #13131e;
+  --border:         #252535;
+  --accent:         #00ff9d;
+  --accent-rgb:     0,255,157;
+  --danger:         #ff3860;
+  --warn:           #ffdd57;
+  --text:           #c8c8e0;
+  --dim:            #50507a;
+  --cell-unrevealed: #1a1a28;
+  --cell-revealed:   #0c0c16;
+  --cell-hover:      #232338;
+  --glow:            0 0 14px rgba(0,255,157,0.45);
+  --glow-danger:     0 0 14px rgba(255,56,96,0.5);
+  background: radial-gradient(ellipse at 20% 20%, #0d1a12 0%, #08080f 70%);
+  color: var(--text);
+}
+
+/* ===================== THEME: BLOOD (RED) ===================== */
+body.theme-blood {
+  --bg:             #0f0608;
+  --surface:        #1a0a0c;
+  --panel:          #1f0d10;
+  --border:         #3a1520;
+  --accent:         #ff4060;
+  --accent-rgb:     255,64,96;
+  --danger:         #ff8c00;
+  --warn:           #ffdd57;
+  --text:           #e0c0c8;
+  --dim:            #7a3545;
+  --cell-unrevealed: #280f14;
+  --cell-revealed:   #160609;
+  --cell-hover:      #38151c;
+  --glow:            0 0 14px rgba(255,64,96,0.5);
+  --glow-danger:     0 0 14px rgba(255,140,0,0.5);
+  background: radial-gradient(ellipse at 80% 10%, #1a0810 0%, #0f0608 70%);
+  color: var(--text);
+}
+
+/* ===================== THEME: ICE (BLUE) ===================== */
+body.theme-ice {
+  --bg:             #06101a;
+  --surface:        #0a1825;
+  --panel:          #0e1e2e;
+  --border:         #1a3050;
+  --accent:         #00d4ff;
+  --accent-rgb:     0,212,255;
+  --danger:         #ff3860;
+  --warn:           #ffdd57;
+  --text:           #b0d0e8;
+  --dim:            #2a5070;
+  --cell-unrevealed: #0f2035;
+  --cell-revealed:   #071018;
+  --cell-hover:      #162840;
+  --glow:            0 0 14px rgba(0,212,255,0.45);
+  --glow-danger:     0 0 14px rgba(255,56,96,0.5);
+  background: radial-gradient(ellipse at 50% 0%, #091828 0%, #06101a 70%);
+  color: var(--text);
+}
+
+/* ===================== THEME: GOLD ===================== */
+body.theme-gold {
+  --bg:             #100e06;
+  --surface:        #1a180a;
+  --panel:          #201e0e;
+  --border:         #3a3015;
+  --accent:         #ffd700;
+  --accent-rgb:     255,215,0;
+  --danger:         #ff3860;
+  --warn:           #ff8c00;
+  --text:           #e0d8a0;
+  --dim:            #706030;
+  --cell-unrevealed: #2a2510;
+  --cell-revealed:   #140e04;
+  --cell-hover:      #3a3015;
+  --glow:            0 0 14px rgba(255,215,0,0.45);
+  --glow-danger:     0 0 14px rgba(255,56,96,0.5);
+  background: radial-gradient(ellipse at 30% 80%, #1a1408 0%, #100e06 70%);
+  color: var(--text);
+}
+
+/* ===================== THEME: GHOST (LIGHT) ===================== */
+body.theme-ghost {
+  --bg:             #f0f0f5;
+  --surface:        #e4e4ee;
+  --panel:          #dadadf;
+  --border:         #b8b8cc;
+  --accent:         #5500ff;
+  --accent-rgb:     85,0,255;
+  --danger:         #ff1a3c;
+  --warn:           #ff8800;
+  --text:           #1a1a2e;
+  --dim:            #8888aa;
+  --cell-unrevealed: #d0d0de;
+  --cell-revealed:   #e8e8f2;
+  --cell-hover:      #c8c8d8;
+  --glow:            0 0 12px rgba(85,0,255,0.3);
+  --glow-danger:     0 0 12px rgba(255,26,60,0.4);
+  background: linear-gradient(135deg, #e8e8f2 0%, #f4f4fa 100%);
+  color: var(--text);
+}
+
+body.theme-ghost .scanlines {
+  background: repeating-linear-gradient(
+    0deg, transparent, transparent 3px,
+    rgba(0,0,0,0.02) 3px, rgba(0,0,0,0.02) 4px
+  );
+}

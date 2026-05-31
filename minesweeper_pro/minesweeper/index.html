@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>💣 MINESWEEPER PRO</title>
+<link rel="stylesheet" href="css/style.css">
+<link rel="stylesheet" href="css/themes.css">
+<link rel="stylesheet" href="css/animations.css">
+<link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Orbitron:wght@400;700;900&family=Rajdhani:wght@400;600;700&display=swap" rel="stylesheet">
+</head>
+<body class="theme-cyber" id="app-body">
+
+<!-- Particle canvas background -->
+<canvas id="bg-canvas"></canvas>
+
+<!-- Scanline overlay -->
+<div class="scanlines"></div>
+
+<!-- MAIN CONTAINER -->
+<div class="main-container">
+
+  <!-- HEADER -->
+  <header class="game-header">
+    <div class="header-left">
+      <h1 class="game-title">
+        <span class="title-bomb">💣</span>
+        <span class="title-text">MINESWEEPER</span>
+        <span class="title-pro">PRO</span>
+      </h1>
+      <p class="game-sub">Taktiksel Tarama Protokolü v2.0</p>
+    </div>
+    <div class="header-right">
+      <button class="icon-btn" id="theme-btn" title="Tema Değiştir" onclick="cycleTheme()">🎨</button>
+      <button class="icon-btn" id="sound-btn" title="Ses Aç/Kapat" onclick="toggleSound()">🔊</button>
+      <button class="icon-btn" id="scores-btn" title="Skorlar" onclick="showScoreboard()">🏆</button>
+      <button class="icon-btn" id="help-btn" title="Yardım" onclick="showHelp()">❓</button>
+    </div>
+  </header>
+
+  <!-- DIFFICULTY BAR -->
+  <div class="difficulty-bar">
+    <button class="diff-btn active" data-diff="easy" onclick="setDifficulty('easy',this)">
+      <span class="diff-icon">🟢</span><span>KOLAY</span><small>9×9 · 10💣</small>
+    </button>
+    <button class="diff-btn" data-diff="medium" onclick="setDifficulty('medium',this)">
+      <span class="diff-icon">🟡</span><span>ORTA</span><small>14×14 · 35💣</small>
+    </button>
+    <button class="diff-btn" data-diff="hard" onclick="setDifficulty('hard',this)">
+      <span class="diff-icon">🔴</span><span>ZOR</span><small>16×18 · 60💣</small>
+    </button>
+    <button class="diff-btn" data-diff="custom" onclick="showCustomModal()">
+      <span class="diff-icon">⚙️</span><span>ÖZEL</span><small>Kendin Ayarla</small>
+    </button>
+  </div>
+
+  <!-- HUD -->
+  <div class="hud">
+    <div class="hud-block">
+      <div class="hud-icon">💣</div>
+      <div class="hud-info">
+        <span class="hud-label">MAYIN</span>
+        <span class="hud-value danger" id="mine-count">10</span>
+      </div>
+    </div>
+
+    <div class="hud-center">
+      <div class="combo-display" id="combo-display" style="display:none">
+        <span id="combo-text">COMBO x1</span>
+      </div>
+      <button class="reset-btn" id="reset-btn" onclick="newGame()">
+        <span id="reset-emoji">🔄</span>
+        <span class="reset-label">YENİ OYUN</span>
+      </button>
+      <div class="hint-btn-wrap">
+        <button class="hint-action-btn" id="hint-btn" onclick="useHint()" title="İpucu kullan (3 hakkın var)">
+          💡 <span id="hint-count">3</span>
+        </button>
+      </div>
+    </div>
+
+    <div class="hud-block hud-right">
+      <div class="hud-info" style="text-align:right">
+        <span class="hud-label">SÜRE</span>
+        <span class="hud-value" id="timer">000</span>
+      </div>
+      <div class="hud-icon">⏱️</div>
+    </div>
+  </div>
+
+  <!-- COUNTDOWN (for timed mode) -->
+  <div class="countdown-bar-wrap" id="countdown-wrap" style="display:none">
+    <div class="countdown-bar" id="countdown-bar"></div>
+    <span class="countdown-label" id="countdown-label">60s</span>
+  </div>
+
+  <!-- STREAK BAR -->
+  <div class="streak-wrap" id="streak-wrap" style="display:none">
+    <div class="streak-bar">
+      <div class="streak-fill" id="streak-fill"></div>
+    </div>
+    <span class="streak-label" id="streak-label">Seri: 0</span>
+  </div>
+
+  <!-- BOARD -->
+  <div class="board-outer" id="board-outer">
+    <div class="board-wrapper" id="board-wrapper">
+      <div id="board"></div>
+    </div>
+  </div>
+
+  <!-- CONTROLS HINT -->
+  <div class="controls-hint">
+    <span>🖱️ Sol tık: Aç</span>
+    <span>🚩 Sağ tık: Bayrak</span>
+    <span>❓ Orta/Çift sağ: Soru işareti</span>
+    <span>🖱️🖱️ Çift tık: Otomatik aç</span>
+    <span>📱 Uzun bas: Bayrak</span>
+  </div>
+
+</div>
+
+<!-- ============ MODALS ============ -->
+
+<!-- WIN/LOSE OVERLAY -->
+<div class="overlay" id="overlay">
+  <div class="overlay-card" id="overlay-card">
+    <div class="overlay-particles" id="overlay-particles"></div>
+    <div class="overlay-emoji" id="overlay-emoji">💥</div>
+    <div class="overlay-title" id="overlay-title">GAME OVER</div>
+    <div class="overlay-sub" id="overlay-sub">Mayına bastın!</div>
+    <div class="overlay-stats">
+      <div class="stat">
+        <span class="stat-val" id="stat-time">0s</span>
+        <span class="stat-lbl">Süre</span>
+      </div>
+      <div class="stat">
+        <span class="stat-val" id="stat-cells">0</span>
+        <span class="stat-lbl">Açılan</span>
+      </div>
+      <div class="stat">
+        <span class="stat-val" id="stat-score">0</span>
+        <span class="stat-lbl">Skor</span>
+      </div>
+      <div class="stat">
+        <span class="stat-val" id="stat-accuracy">0%</span>
+        <span class="stat-lbl">İsabet</span>
+      </div>
+    </div>
+    <div class="new-record" id="new-record" style="display:none">🎉 YENİ REKOR!</div>
+    <div class="overlay-actions">
+      <button class="action-btn primary" onclick="newGame(); closeOverlay()">🔄 Tekrar Oyna</button>
+      <button class="action-btn" onclick="showScoreboard(); closeOverlay()">🏆 Skorlar</button>
+    </div>
+  </div>
+</div>
+
+<!-- SCOREBOARD MODAL -->
+<div class="modal" id="scoreboard-modal">
+  <div class="modal-card wide">
+    <button class="modal-close" onclick="closeModal('scoreboard-modal')">✕</button>
+    <h2 class="modal-title">🏆 EN İYİ SKORLAR</h2>
+    <div class="score-tabs">
+      <button class="score-tab active" onclick="showScoreTab('easy',this)">Kolay</button>
+      <button class="score-tab" onclick="showScoreTab('medium',this)">Orta</button>
+      <button class="score-tab" onclick="showScoreTab('hard',this)">Zor</button>
+    </div>
+    <div class="score-list" id="score-list"></div>
+    <button class="action-btn danger" onclick="clearScores()">🗑️ Skorları Temizle</button>
+  </div>
+</div>
+
+<!-- CUSTOM MAP MODAL -->
+<div class="modal" id="custom-modal">
+  <div class="modal-card">
+    <button class="modal-close" onclick="closeModal('custom-modal')">✕</button>
+    <h2 class="modal-title">⚙️ ÖZEL HARİTA</h2>
+    <div class="custom-form">
+      <div class="form-row">
+        <label>Satır <span id="rows-val">10</span></label>
+        <input type="range" min="5" max="25" value="10" id="custom-rows" oninput="document.getElementById('rows-val').textContent=this.value">
+      </div>
+      <div class="form-row">
+        <label>Sütun <span id="cols-val">10</span></label>
+        <input type="range" min="5" max="30" value="10" id="custom-cols" oninput="document.getElementById('cols-val').textContent=this.value">
+      </div>
+      <div class="form-row">
+        <label>Mayın <span id="mines-val">15</span></label>
+        <input type="range" min="1" max="150" value="15" id="custom-mines" oninput="document.getElementById('mines-val').textContent=this.value">
+      </div>
+      <div class="form-row">
+        <label>Geri Sayım (sn, 0=kapalı) <span id="timer-val">0</span></label>
+        <input type="range" min="0" max="300" value="0" step="10" id="custom-timer" oninput="document.getElementById('timer-val').textContent=this.value">
+      </div>
+    </div>
+    <button class="action-btn primary" onclick="applyCustom()">✅ Uygula ve Başla</button>
+  </div>
+</div>
+
+<!-- HELP MODAL -->
+<div class="modal" id="help-modal">
+  <div class="modal-card">
+    <button class="modal-close" onclick="closeModal('help-modal')">✕</button>
+    <h2 class="modal-title">❓ NASIL OYNANIR</h2>
+    <div class="help-content">
+      <div class="help-item"><span class="help-icon">🖱️</span><div><strong>Sol Tık</strong><p>Hücreyi aç</p></div></div>
+      <div class="help-item"><span class="help-icon">🚩</span><div><strong>Sağ Tık</strong><p>Bayrak / Soru işareti koy</p></div></div>
+      <div class="help-item"><span class="help-icon">⚡</span><div><strong>Çift Tık</strong><p>Yeterli bayrak varsa otomatik aç</p></div></div>
+      <div class="help-item"><span class="help-icon">💡</span><div><strong>İpucu (3 hak)</strong><p>Güvenli bir hücreyi otomatik açar</p></div></div>
+      <div class="help-item"><span class="help-icon">🏆</span><div><strong>Kazanma</strong><p>Tüm mayınsız hücreleri aç!</p></div></div>
+      <div class="help-item"><span class="help-icon">⭐</span><div><strong>Skor</strong><p>Hız + isabetli bayrak = yüksek skor</p></div></div>
+    </div>
+  </div>
+</div>
+
+<!-- NAME INPUT MODAL (for high score) -->
+<div class="modal" id="name-modal">
+  <div class="modal-card small">
+    <h2 class="modal-title">🎉 YENİ REKOR!</h2>
+    <p class="modal-sub">Adını gir:</p>
+    <input type="text" class="name-input" id="player-name" placeholder="Oyuncu Adı" maxlength="20">
+    <button class="action-btn primary" onclick="saveScore()">💾 Kaydet</button>
+  </div>
+</div>
+
+<!-- SCRIPTS -->
+<script src="js/sound.js"></script>
+<script src="js/scores.js"></script>
+<script src="js/game.js"></script>
+<script src="js/ui.js"></script>
+</body>
+</html>
